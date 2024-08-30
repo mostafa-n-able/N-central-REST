@@ -21,6 +21,7 @@
     .CLASSIFICATION
     Destructive: No
     Potentially Long Running: Yes
+
     .EXAMPLE
     $result = Get-OrganizationUnit -orgUnitId 123 -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token_here"
     $result | ConvertTo-Json -Depth 5
