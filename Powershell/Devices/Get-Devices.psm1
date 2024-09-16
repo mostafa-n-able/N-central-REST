@@ -1,20 +1,26 @@
 <#
     .SYNOPSIS
-    Retrieves a list of devices from the N-central API.
+    Retrieves a list of devices from N-central.
 
     .DESCRIPTION
-    This function sends a GET request to the /api/devices endpoint of the N-central API
-    and returns the list of devices as a JSON object. It supports pagination and sorting.
+    This function retrieves a list of devices from N-central using the GET /api/devices endpoint.
+    It supports pagination, sorting, and filtering.
 
     .INPUTS
+    None
 
     .OUTPUTS
-    System.Object. Returns a JSON object containing the list of devices.
+    System.Object
+    Returns a JSON object containing the list of devices and pagination information.
 
     .NOTES
+    This function requires the BaseURI of the API endpoint and a valid AccessToken for authentication.
 
     .EXAMPLE
-    $devices = Get-NCentralDevices -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token" -PageNumber 1 -PageSize 50 -SortBy "deviceId" -SortOrder "asc"
+    $devices = Get-NCentralDevices -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token"
+
+    .PROMPT
+    Read the OpenAPI Spec and using the details and parameters for the GET /api/devices endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object.
 #>
 function Get-NCentralDevices {
     [CmdletBinding()]
@@ -35,6 +41,9 @@ function Get-NCentralDevices {
         [int]$PageSize = 50,
 
         [Parameter(Mandatory = $false)]
+        [string]$Select,
+
+        [Parameter(Mandatory = $false)]
         [string]$SortBy,
 
         [Parameter(Mandatory = $false)]
@@ -42,61 +51,57 @@ function Get-NCentralDevices {
         [string]$SortOrder = "ASC"
     )
 
-    $ErrorActionPreference = 'Stop'
-    #$DebugPreference = 'Continue'
-
-    Write-Debug "Starting Get-NCentralDevices function"
-
-    # Construct the API endpoint URL
-    $apiEndpoint = "$BaseURI/api/devices"
-    Write-Debug "API Endpoint: $apiEndpoint"
-
-    # Construct query parameters
-    $queryParams = @{}
-    if ($FilterId) { $queryParams['filterId'] = $FilterId }
-    if ($PageNumber) { $queryParams['pageNumber'] = $PageNumber }
-    if ($PageSize) { $queryParams['pageSize'] = $PageSize }
-    if ($SortBy) { $queryParams['sortBy'] = $SortBy }
-    if ($SortOrder) { $queryParams['sortOrder'] = $SortOrder }
-
-    $queryString = New-HttpQueryString -Parameters $queryParams
-    $fullUrl = "$apiEndpoint$queryString"
-    Write-Debug "Full URL: $fullUrl"
-
-    # Set up headers
-    $headers = @{
-        'Authorization' = "Bearer $AccessToken"
-        'Accept' = 'application/json'
+    begin {
+        $ErrorActionPreference = 'Stop'
+        $headers = @{
+            "Authorization" = "Bearer $AccessToken"
+            "Content-Type" = "application/json"
+        }
+        $endpoint = "$BaseURI/api/devices"
     }
 
-    try {
-        Write-Debug "Sending GET request to N-central API"
-        $response = Invoke-RestMethod -Uri $fullUrl -Headers $headers -Method Get -ErrorAction Stop
+    process {
+        try {
+            Write-Debug "Preparing query parameters"
+            $queryParams = @{}
+            if ($FilterId) { $queryParams['filterId'] = $FilterId }
+            if ($PageNumber -ne 1) { $queryParams['pageNumber'] = $PageNumber }
+            if ($PageSize -ne 50) { $queryParams['pageSize'] = $PageSize }
+            if ($Select) { $queryParams['select'] = $Select }
+            if ($SortBy) { $queryParams['sortBy'] = $SortBy }
+            if ($SortOrder -ne "ASC") { $queryParams['sortOrder'] = $SortOrder }
 
-        Write-Debug "Request successful. Processing response."
-        return $response | ConvertTo-Json -Depth 10
+            $queryString = New-HttpQueryString -Parameters $queryParams
 
+            $uri = if ($queryString) { "$endpoint`?$queryString" } else { $endpoint }
+
+            Write-Debug "Sending GET request to $uri"
+            $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
+
+            Write-Debug "Request successful. Processing response."
+            return $response | ConvertTo-Json -Depth 10
+        }
+        catch {
+            Write-Error "An error occurred while retrieving devices: $_"
+            if ($_.Exception.Response) {
+                $statusCode = [int]$_.Exception.Response.StatusCode
+                $statusDescription = $_.Exception.Response.StatusDescription
+                Write-Debug "HTTP Status Code: $statusCode - $statusDescription"
+
+                if ($statusCode -eq 401) {
+                    Write-Warning "Authentication failed. Please check your AccessToken."
+                }
+                elseif ($statusCode -eq 403) {
+                    Write-Warning "Access forbidden. You may not have the necessary permissions."
+                }
+                elseif ($statusCode -eq 404) {
+                    Write-Warning "The requested resource was not found."
+                }
+            }
+        }
     }
-    catch {
-        $statusCode = $_.Exception.Response.StatusCode.value__
-        $statusDescription = $_.Exception.Response.StatusDescription
 
-        Write-Error "Error occurred while fetching devices: $statusCode $statusDescription"
-        Write-Debug "Error details: $_"
-
-        if ($statusCode -eq 401) {
-            Write-Warning "Authentication failed. Please check your access token."
-        }
-        elseif ($statusCode -eq 403) {
-            Write-Warning "Access forbidden. You may not have the necessary permissions."
-        }
-        elseif ($statusCode -eq 404) {
-            Write-Warning "Resource not found. Please check the API endpoint URL."
-        }
-        elseif ($statusCode -ge 500) {
-            Write-Warning "Server error occurred. Please try again later or contact support."
-        }
-
-        return $null
+    end {
+        Write-Debug "Function Get-NCentralDevices completed."
     }
 }
