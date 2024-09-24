@@ -72,14 +72,14 @@
     This function requires valid authentication and appropriate permissions to create customers.
 
     .EXAMPLE
-    $newCustomer = New-NCentralCustomer -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token" -SoId 123 -CustomerName "New Customer" -ContactFirstName "John" -ContactLastName "Doe" -LicenseType "Professional" -City "New York" -Country "US" -ContactEmail "john.doe@example.com"
+    $newCustomer = New-Customer -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token" -SoId 123 -CustomerName "New Customer" -ContactFirstName "John" -ContactLastName "Doe" -LicenseType "Professional" -City "New York" -Country "US" -ContactEmail "john.doe@example.com"
 
     This example creates a new customer named "New Customer" under the service organization with ID 123.
 
     .PROMPT
     Read the OpenAPI Spec and using the details and parameters for the POST /api/service-orgs/{soId}/customers endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object.
 #>
-function New-NCentralCustomer {
+function New-Customer {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]

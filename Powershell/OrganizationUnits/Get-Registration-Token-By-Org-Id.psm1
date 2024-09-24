@@ -16,12 +16,12 @@
     This function is part of the N-able N-central API PowerShell module.
 
     .EXAMPLE
-    Get-NCentralOrgUnitRegistrationToken -OrgUnitId 12345 -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token_here"
+    Get-OrgUnitRegistrationToken -OrgUnitId 12345 -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token_here"
 
     .PROMPT
     Read the OpenAPI Spec and using the details and parameters for the GET /api/org-units/{orgUnitId}/registration-token endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object.
 #>
-function Get-NCentralOrgUnitRegistrationToken {
+function Get-OrgUnitRegistrationToken {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]

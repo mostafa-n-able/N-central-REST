@@ -17,12 +17,12 @@
     This function requires the BaseURI of the API endpoint and a valid AccessToken for authentication.
 
     .EXAMPLE
-    $sites = Get-NCentralSites -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token"
+    $sites = Get-Sites -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token"
 
     .PROMPT
     Read the OpenAPI Spec and using the details and parameters for the GET /api/sites endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object.
 #>
-function Get-NCentralSites {
+function Get-Sites {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]

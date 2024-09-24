@@ -62,13 +62,13 @@ function Update-DefaultOrgUnitCustomProperty {
         [Parameter(Mandatory = $true)]
         [int]$OrgUnitId,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [string]$DefaultValue,
 
         [Parameter(Mandatory = $false)]
         [string[]]$EnumeratedValueList,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [ValidateSet("NO_PROPAGATION", "SERVICE_ORGANIZATION_ONLY", "SERVICE_ORGANIZATION_AND_CUSTOMER_AND_SITE", "SERVICE_ORGANIZATION_AND_CUSTOMER", "SERVICE_ORGANIZATION_AND_SITE", "CUSTOMER_AND_SITE", "CUSTOMER_ONLY", "SITE_ONLY")]
         [string]$PropagationType,
 
@@ -78,10 +78,10 @@ function Update-DefaultOrgUnitCustomProperty {
         [Parameter(Mandatory = $true)]
         [string]$PropertyName,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [int[]]$SelectedOrgUnitIds,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $true)]
         [bool]$Propagate
     )
 

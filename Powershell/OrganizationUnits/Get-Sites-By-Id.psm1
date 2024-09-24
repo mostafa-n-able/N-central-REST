@@ -18,12 +18,12 @@
     This function is based on the N-central API specification version 1.0.
 
     .EXAMPLE
-    $siteInfo = Get-NcentralSite -SiteId 12345 -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token"
+    $siteInfo = Get-Site-By-Id -SiteId 12345 -BaseURI "https://api.ncentral.com" -AccessToken "your_access_token"
 
     .PROMPT
     Read the OpenAPI Spec and using the details and parameters for the GET /api/sites/{siteId} endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object.
 #>
-function Get-NcentralSite {
+function Get-Site-By-Id {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]

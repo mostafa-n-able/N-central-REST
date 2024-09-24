@@ -92,7 +92,7 @@ function Get-OrgUnitCustomProperties {
         $statusCode = $_.Exception.Response.StatusCode.value__
         $statusDescription = $_.Exception.Response.StatusDescription
 
-        Write-Error "API request failed with status code $statusCode: $statusDescription"
+        Write-Error "API request failed with status code $statusCode - $statusDescription"
         
         if ($_.Exception.Response) {
             $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())

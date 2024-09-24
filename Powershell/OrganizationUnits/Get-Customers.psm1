@@ -17,12 +17,12 @@
     This function requires the BaseURI of the API endpoint and a valid AccessToken.
 
     .EXAMPLE
-    $customers = Get-NAbleCustomers -BaseURI "https://api.n-able.com" -AccessToken "your_access_token_here"
+    $customers = Get-Customers -BaseURI "https://api.n-able.com" -AccessToken "your_access_token_here"
 
     .PROMPT
     Read the OpenAPI Spec and using the details and parameters for the GET /api/customers endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object.
 #>
-function Get-NAbleCustomers {
+function Get-Customers {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]

@@ -51,11 +51,6 @@ function Update-DeviceAssetLifecycleInfo {
             "Authorization" = "Bearer $AccessToken"
             "Content-Type" = "application/json"
         }
-
-        # Initialize debug logger
-        $DebugPreference = 'Continue'
-        $debugLogFile = Join-Path $env:TEMP "Update-DeviceAssetLifecycleInfo_Debug.log"
-        Start-Transcript -Path $debugLogFile -Append
     }
 
     process {
@@ -105,7 +100,5 @@ function Update-DeviceAssetLifecycleInfo {
     }
 
     end {
-        Stop-Transcript
-        Write-Debug "Debug log saved to: $debugLogFile"
     }
 }
