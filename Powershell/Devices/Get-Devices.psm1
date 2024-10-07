@@ -73,7 +73,7 @@ function Get-Devices {
 
             $queryString = New-HttpQueryString -Parameters $queryParams
 
-            $uri = if ($queryString) { "$endpoint`?$queryString" } else { $endpoint }
+            $uri = if ($queryString) { "$endpoint$queryString" } else { $endpoint }
 
             Write-Debug "Sending GET request to $uri"
             $response = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get
