@@ -1,6 +1,6 @@
 def get_org_unit_users(org_unit_id, base_uri, access_token, page_number=1, page_size=50, select=None, sort_by=None, sort_order="ASC"):
     """
-    SYNOPSIS
+     SYNOPSIS
     Retrieve the list of users for a specific organization unit.
 
     DESCRIPTION
@@ -19,6 +19,18 @@ def get_org_unit_users(org_unit_id, base_uri, access_token, page_number=1, page_
 
     OUTPUTS
     Returns a JSON object containing the list of users and pagination information.
+
+    NOTES
+    - This endpoint is currently in a preview stage.
+    - The function uses the requests library for making HTTP requests.
+    - Error handling is implemented for common HTTP errors.
+
+    USAGE_EXAMPLE
+    users = get_org_unit_users("12345", "https://api.example.com", "your_access_token")
+    print(users)
+
+    PROMPT
+    Read the OpenAPI Spec and using the details and parameters for the GET /api/org-units/{orgUnitId}/users endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object
     """
 
     import requests
