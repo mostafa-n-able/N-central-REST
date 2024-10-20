@@ -33,9 +33,6 @@ def get_users(base_uri, access_token):
 import requests
 import logging
 
-# Example values for testing
-base_uri = "Replace with N-central Server"
-access_token = "Replace with N-central API user Access_Token"
 
 def get_users(base_uri, access_token):
    
