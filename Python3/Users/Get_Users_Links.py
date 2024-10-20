@@ -77,9 +77,5 @@ def get_users(base_uri, access_token):
         logger.error(f"Unexpected error: {e}")
         raise
 
-# Usage Example
-user_links = get_users(base_uri, access_token)
-print("User links:", user_links)
-    
 
     
