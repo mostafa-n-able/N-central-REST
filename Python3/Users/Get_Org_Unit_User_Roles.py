@@ -1,6 +1,6 @@
 def get_org_unit_users(org_unit_id, base_uri, access_token, page_number=1, page_size=50, select=None, sort_by=None, sort_order="ASC"):
     """
-    SYNOPSIS
+     SYNOPSIS
     Retrieve the list of users for a specific organization unit.
 
     DESCRIPTION
@@ -30,8 +30,9 @@ def get_org_unit_users(org_unit_id, base_uri, access_token, page_number=1, page_
     print(users)
 
     PROMPT
-    Read the OpenAPI Spec and using the details and parameters for the GET /api/org-units/{orgUnitId}/users endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object.
+    Read the OpenAPI Spec and using the details and parameters for the GET /api/org-units/{orgUnitId}/users endpoint, write a helper function that would accept those parameters as arguments and returns the output as a JSON object
     """
+
     import requests
     import logging
 
@@ -61,18 +62,15 @@ def get_org_unit_users(org_unit_id, base_uri, access_token, page_number=1, page_
     if sort_order:
         params["sortOrder"] = sort_order
 
-    # Use the New-HttpQueryString function (assumed to be available)
-    query_string = New-HttpQueryString(Parameters=params)
-
     # Log the request details
     logger.debug(f"Making GET request to: {url}")
     logger.debug(f"Headers: {headers}")
-    logger.debug(f"Query parameters: {query_string}")
+    logger.debug(f"Query parameters: {params}")
 
     try:
-        # Make the GET request
-        response = requests.get(url, headers=headers, params=query_string)
-        
+        # Make the GET request with the constructed URL, headers, and parameters
+        response = requests.get(url, headers=headers, params=params)
+
         # Check for successful response
         response.raise_for_status()
 
