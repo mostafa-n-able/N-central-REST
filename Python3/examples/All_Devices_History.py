@@ -141,33 +141,49 @@ print("Successfully authenticated!")
 
 # Optional parameters for get_devices (set to None if not needed)
 filter_id = None  # The ID of a filter to apply
-page_number = 1  # Starting page number
-page_size = 50  # Number of devices per page
+page_size = 500  # Number of devices per page
 select = None  # Field selection expression
 sort_by = "deviceName"  # Sort by device name
 sort_order = "asc"  # Sort in ascending order
 
-# Call the get_devices function
-response = get_devices(
-    base_uri=base_uri,
-    access_token=access_token,
-    filter_id=filter_id,
-    page_number=page_number,
-    page_size=page_size,
-    select=select,
-    sort_by=sort_by,
-    sort_order=sort_order
-)
+# Fetch all devices with pagination
+all_devices = []
+page_number = 1
+
+print("Fetching devices...")
+while True:
+    response = get_devices(
+        base_uri=base_uri,
+        access_token=access_token,
+        filter_id=filter_id,
+        page_number=page_number,
+        page_size=page_size,
+        select=select,
+        sort_by=sort_by,
+        sort_order=sort_order
+    )
+    
+    if not response or "data" not in response:
+        print(f"Failed to retrieve devices on page {page_number}.")
+        break
+    
+    devices = response["data"]
+    if not devices:
+        break  # No more devices to fetch
+    
+    all_devices.extend(devices)
+    print(f"  Page {page_number}: fetched {len(devices)} devices (total: {len(all_devices)})")
+    
+    # Check if we've fetched all devices (less than page_size means last page)
+    if len(devices) < page_size:
+        break
+    
+    page_number += 1
 
 # Save results to SQLite database
 db_filename = os.path.join(script_dir, "ncentral_device_history.db")
 
-if response and "data" in response:
-    devices = response["data"]
-    
-    if devices:
-        save_devices_to_db(db_filename, devices)
-    else:
-        print("No devices found in the response.")
+if all_devices:
+    save_devices_to_db(db_filename, all_devices)
 else:
-    print("Failed to retrieve devices or empty response.")
+    print("No devices found.")
